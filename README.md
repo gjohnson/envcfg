@@ -6,6 +6,13 @@ envcfg is an environment aware configuration module. It is inspired by settings 
 
 It can load configurations from json files, modules or just plain objects. Do note that when loading from disk `readFileSync` or `require` will be used.
 
+## Install
+*****
+
+```shell
+npm install envcfg
+```
+
 ## Usage
 *****
 
