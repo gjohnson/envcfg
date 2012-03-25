@@ -1,3 +1,6 @@
+
+[![Build Status](https://secure.travis-ci.org/[gjohnson]/[envcfg].png)](http://travis-ci.org/[gjohnson]/[envcfg])
+
 # envcfg
 
 envcfg is an environment aware configuration module. It is inspired by settings and cfg.
