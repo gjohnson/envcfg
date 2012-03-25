@@ -88,9 +88,11 @@ var config = require('envcfg')({
 ## Mutability
 *****
 
-Ever have anyone muck around with your configuration settings? No worries, the object returned from `envcfg` cannot be tampered with.
+Ever have anyone muck around with your configuration settings? No worries, the object returned from `envcfg` cannot be tampered with. In strict mode exceptions will be thrown and in none-strict mode, they will be ignored.
 
 ```javascript
+'use strict';
+
 var config = require('envcfg')({
 	"*": {
 		"foo": "foo-*",
@@ -105,14 +107,11 @@ var config = require('envcfg')({
 	}
 });
 
-// ignores re-setting
-console.log(config.buz); // => "buzz-*"
-config.buzz = "buzz off";
-console.log(config.buz); // => "buzz-*"
+// throws on re-setting
+config.buzz = "buzz off"; // throws TypeError
 
-// actually ignores everything...
-config.something_new = 'wtf';
-console.log(config.something_new); // => undefined
+// throws on setting new values
+config.something_new = 'wtf'; // throws TypeError
 ```
 
 

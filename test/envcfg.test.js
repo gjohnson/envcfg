@@ -1,3 +1,4 @@
+'use strict';
 
 var envcfg = require('../index');
 var path = require('path');
@@ -45,20 +46,24 @@ describe('envcfg', function() {
 		});
 
 		it('should not be possible to change a value', function() {
-			config.foo.should.equal('foo-test');
-			config.foo = 'foo-changed';
+			(function() {
+				config.foo = 'foo-changed';
+			}).should.throw();
 			config.foo.should.equal('foo-test');
 		});
 
 		it('should not be possible to delete values', function() {
-			config.foo.should.equal('foo-test');
-			delete config.foo;
+			(function() {
+				delete config.foo;
+			}).should.throw();
 			config.foo.should.equal('foo-test');
 		});
 
 		it('should not be possible to add new values', function() {
-			config.whatever = 'whatever';
-			should.strictEqual(config.whatever, undefined);
+			(function(){
+				config.whatever = 'whatever';
+				should.strictEqual(config.whatever, undefined);
+			}).should.throw();
 		});
 	});
 
