@@ -1,0 +1,21 @@
+{
+  "author": "Garrett Johnson",
+  "name": "envcfg",
+  "description": "stupid simple environment aware configuration",
+  "version": "0.0.1",
+  "repository": {
+    "url": ""
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "1.0.0",
+    "should": "0.6.0"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": ">= 0.4.12"
+  }
+}
