@@ -1,4 +1,4 @@
- [![Build Status](https://secure.travis-ci.org/gjohnson/envpng.png)](http://travis-ci.org/gjohnson/envcfg)
+ [![Build Status](https://secure.travis-ci.org/gjohnson/envcfg.png?branch=master)](http://travis-ci.org/gjohnson/envcfg)
 
 # envcfg
 
