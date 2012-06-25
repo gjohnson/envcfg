@@ -21,7 +21,7 @@ The configuration can be broken down by environment, with the special `*` key wh
 ## Files
 *****
 
-Files can be loaded by passing the path to file that follows the structure above. If the file ends in `.json` it will be assumed it is a JSON file and will be parsed accordingly. 
+Files can be loaded by passing the path to file that follows the structure above. If the file ends in `.json` it will be assumed it is a JSON file and will be parsed accordingly.
 
 ```javascript
 var envcfg = require('envcfg');
