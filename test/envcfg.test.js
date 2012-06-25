@@ -2,7 +2,7 @@
 
 var envcfg = require('../index');
 var path = require('path');
-var should = require('should');
+var assert = require('assert');
 
 describe('envcfg', function() {
 
@@ -11,65 +11,65 @@ describe('envcfg', function() {
 	describe('#envcfg(path)', function() {
 		it("should create from a json file path", function() {
 			var config = envcfg(path.join(__dirname + '/fixtures/basic.json'));
-			config.should.be.instanceof(envcfg.Config);
+			assert(config instanceof envcfg.Config);
 		});
 
 		it("should create from a module path", function() {
 			var config = envcfg(path.join(__dirname + '/fixtures/basic'));
-			config.should.be.instanceof(envcfg.Config);
+			assert(config instanceof envcfg.Config);
 		});
 	});
 
 	describe('#envcfg(object)', function() {
 		it("should create from an object", function() {
 			var config = envcfg(require(path.join(__dirname + '/fixtures/basic')));
-			config.should.be.instanceof(envcfg.Config);
+			assert(config instanceof envcfg.Config);
 		});
 	});
 
 	describe('#.env', function() {
 		it('should expose the detected environment', function() {
-			config.env.should.equal(process.env.NODE_ENV);
+			assert.equal(config.env, process.env.NODE_ENV);
 		});
 
 		it('should not be enumerable', function() {
 			var enumerable = Object.getOwnPropertyDescriptor(config, 'env').enumerable;
-			enumerable.should.not.be.true;
+			assert(enumerable === false);
 		});
 	});
 
 	describe('#.setting', function() {
 		it('should provide the setting value based on environment', function() {
-			config.foo.should.equal('foo-test');
-			config.bar.should.equal('bar-test');
-			config.buz.should.equal('buzz-*');
+			assert.equal(config.foo, 'foo-test');
+			assert.equal(config.bar, 'bar-test');
+			assert.equal(config.buz, 'buzz-*');
 		});
 
 		it('should not be possible to change a value', function() {
-			(function() {
+			assert.throws(function() {
 				config.foo = 'foo-changed';
-			}).should.throw();
-			config.foo.should.equal('foo-test');
+			}, Error);
+			assert.equal(config.foo, 'foo-test');
 		});
 
 		it('should not be possible to delete values', function() {
-			(function() {
+			assert.throws(function() {
 				delete config.foo;
-			}).should.throw();
-			config.foo.should.equal('foo-test');
+			}, Error);
+			assert.equal(config.foo, 'foo-test');
 		});
 
 		it('should not be possible to add new values', function() {
-			(function(){
+			assert.throws(function(){
 				config.whatever = 'whatever';
-				should.strictEqual(config.whatever, undefined);
-			}).should.throw();
+				assert.strictEqual(config.whatever, undefined);
+			}, Error);
 		});
 	});
 
 	describe('#Object.keys(config)', function() {
 		it('should only iterate config values', function() {
-			Object.keys(config).should.have.lengthOf(3);
+			assert.equal(Object.keys(config).length, 3);
 		});
 	});
 
