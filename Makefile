@@ -1,6 +1,4 @@
 
-export NODE_ENV = test
-
 TESTS = $(shell find test/*.test.js)
 
 test:
