@@ -2,7 +2,7 @@
   "author": "Garrett Johnson",
   "name": "envcfg",
   "description": "stupid simple environment aware configuration",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "git@github.com:gjohnson/envcfg.git"
