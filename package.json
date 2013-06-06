@@ -10,13 +10,11 @@
   "scripts": {
     "test": "make test"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "mocha": "1.0.0",
-    "should": "0.6.0"
+  "dependencies": {
+    "clone": "~0.1.9"
   },
-  "optionalDependencies": {},
-  "engines": {
-    "node": ">= 0.4.12"
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
   }
 }

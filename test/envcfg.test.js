@@ -52,7 +52,7 @@ describe('envcfg', function() {
 			assert.equal(config.foo, 'foo-test');
 		});
 
-		it('should not be possible to delete values', function() {
+		it('shouvld not be possible to delete values', function() {
 			assert.throws(function() {
 				delete config.foo;
 			}, Error);
@@ -69,7 +69,13 @@ describe('envcfg', function() {
 
 	describe('#Object.keys(config)', function() {
 		it('should only iterate config values', function() {
-			assert.equal(Object.keys(config).length, 3);
+			assert.equal(Object.keys(config).length, 4);
+		});
+	});
+
+	describe('#.get(key)', function(){
+		it('should access the property', function(){
+			config.get('some stuff').should.equal('whatever');
 		});
 	});
 

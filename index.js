@@ -4,12 +4,68 @@
  */
 
 var fs = require('fs');
+var path = require('path');
+var clone = require('clone');
 
 /**
  * Expose `envcfg` as the module.
  */
 
 module.exports = exports = envcfg;
+
+/**
+ * Descriptor defaults.
+ *
+ * @type {Object}
+ * @api private
+ */
+
+var descriptors = {
+  writable: false,
+  configurable: false,
+  enumerable: false
+};
+
+/**
+ * Expose `Config`.
+ */
+
+exports.Config = Config;
+
+/**
+ * Config constructor.
+ *
+ * @param {Object}
+ * @api public
+ */
+
+function Config(cfg) {
+  define(this, 'env', {
+    value: process.env.NODE_ENV || 'development'
+  });
+
+  var settings = clone(cfg[this.env]) || cfg;
+  if (cfg['*']) extend(settings, cfg['*']);
+
+  Object.keys(settings).forEach(function(key) {
+    define(this, key, {
+      value: settings[key],
+      enumerable: true
+    });
+  }, this);
+}
+
+/**
+ * Accessor for sugar.
+ *
+ * @param {String} key
+ * @return {Mixed}
+ * @api public
+ */
+
+Config.prototype.get = function(key){
+  return this[key];
+};
 
 /**
  * Create a config into an environment aware one.
@@ -33,25 +89,9 @@ function envcfg(config) {
  */
 
 function read(file) {
-  var ext = file.substring(file.length - 5);
-  return ext === '.json' ? JSON.parse(fs.readFileSync(file)) : require(file);
-}
-
-/**
- * Shallow copies `obj`.
- *
- * @param {Object} obj
- * @return {Object}
- * @api private
- */
-
-function copy(obj) {
-  if (!obj) return;
-  var target = {};
-  Object.keys(obj).forEach(function(key) {
-    target[key] = obj[key];
-  });
-  return target;
+  return path.extname(file) === '.json'
+    ? JSON.parse(fs.readFileSync(file, 'utf-8'))
+    : require(file);
 }
 
 /**
@@ -65,50 +105,20 @@ function copy(obj) {
 
 function extend(a, b) {
   Object.keys(b).forEach(function(key) {
-    if (!a[key]) {
-      a[key] = b[key];
-    }
+    if (!a.hasOwnProperty(key)) a[key] = b[key];
   });
   return a;
 }
 
 /**
- * Expose `Config`.
- */
-
-exports.Config = Config;
-
-/**
- * Config constructor.
+ * Short hand descriptor creation.
  *
- * @param {Object}
- * @api public
+ * @param {Object} context
+ * @param {String} key
+ * @param {Object} value
+ * @api private
  */
 
-function Config(cfg) {
-  var env = process.env.NODE_ENV || 'development';
-  var settings = copy(cfg[env]) || cfg;
-  var common = cfg['*'];
-  var descriptors = {
-    writable: false,
-    configurable: false,
-    enumerable: false
-  };
-
-  if (common) {
-    extend(settings, common);
-  }
-
-  Object.defineProperty(this, 'env', extend({
-    value: env
-  }, descriptors));
-
-  Object.keys(settings).forEach(function(key) {
-    Object.defineProperty(this, key, extend({
-      value: settings[key],
-      enumerable: true
-    }, descriptors));
-  }, this);
+function define(context, key, value){
+  Object.defineProperty(context, key, extend(value, descriptors));
 }
-
-

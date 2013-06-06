@@ -1,7 +1,8 @@
 {
 	"*": {
 		"foo": "foo-*",
-		"buz": "buzz-*"
+		"buz": "buzz-*",
+		"some stuff": "whatever"
 	},
 	"development": {
 		"bar": "bar-development"
