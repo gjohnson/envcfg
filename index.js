@@ -66,8 +66,8 @@ function copy(obj) {
 function extend(a, b) {
   Object.keys(b).forEach(function(key) {
     if (!a[key]) {
-            a[key] = b[key];
-        }
+      a[key] = b[key];
+    }
   });
   return a;
 }
