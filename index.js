@@ -44,7 +44,7 @@ function Config(cfg) {
     value: process.env.NODE_ENV || 'development'
   });
 
-  var settings = clone(cfg[this.env]) || cfg;
+  var settings = clone(cfg[this.env]) || {};
   if (cfg['*']) extend(settings, cfg['*']);
 
   Object.keys(settings).forEach(function(key) {
