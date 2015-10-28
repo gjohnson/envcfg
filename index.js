@@ -95,7 +95,7 @@ function read(file) {
 }
 
 /**
- * Extend object `a` with object `b`.
+ * Extend object `a` with object `b`. Now does deep extension.
  *
  * @param {Object} a
  * @param {Object} b
@@ -105,7 +105,11 @@ function read(file) {
 
 function extend(a, b) {
   Object.keys(b).forEach(function(key) {
-    if (!a.hasOwnProperty(key)) a[key] = b[key];
+    if (!a.hasOwnProperty(key)) {
+      a[key] = b[key];
+    } else if (b[key].constructor && b[key].constructor === Object) {
+      a[key] = extend(a[key], b[key]);
+    }
   });
   return a;
 }
