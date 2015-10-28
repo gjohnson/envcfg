@@ -79,4 +79,12 @@ describe('envcfg', function() {
 		});
 	});
 
+	describe('#envcfg(nested_object)', function() {
+		it('should create from a nested object', function() {
+			var config = envcfg(require(path.join(__dirname + '/fixtures/nested')));
+			assert.equal(config.nest.bar, 'exam');
+			assert(config.nest.zing);
+		});
+	});
+
 });
