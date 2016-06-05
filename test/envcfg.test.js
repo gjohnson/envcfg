@@ -7,6 +7,7 @@ var assert = require('assert');
 describe('envcfg', function() {
 
 	var config = envcfg(path.join(__dirname + '/fixtures/basic.json'));
+	var mutable = envcfg(path.join(__dirname + '/fixtures/basic.js'), {deepMerge: true, mutable: true});
 
 	describe('#envcfg(path)', function() {
 		it("should create from a json file path", function() {
@@ -52,6 +53,14 @@ describe('envcfg', function() {
 			assert.equal(config.foo, 'foo-test');
 		});
 
+		it('should be possible to change a value', function() {
+			assert.equal(mutable.foo, 'foo-test');
+			assert.equal(mutable.bar, 'bar-test');
+			assert.equal(mutable.buz, 'buzz-*');
+			mutable.foo = 'foo-not-immutable';
+			assert.equal(mutable.foo, 'foo-not-immutable');
+		});
+
 		it('shouvld not be possible to delete values', function() {
 			assert.throws(function() {
 				delete config.foo;
@@ -59,11 +68,21 @@ describe('envcfg', function() {
 			assert.equal(config.foo, 'foo-test');
 		});
 
+		it('should be possible to delete values', function() {
+			delete mutable.foo;
+			assert(!mutable.foo);
+		});
+
 		it('should not be possible to add new values', function() {
-			assert.throws(function(){
+			assert.throws(function() {
 				config.whatever = 'whatever';
 				assert.strictEqual(config.whatever, undefined);
 			}, Error);
+		});
+
+		it('should be possible to add new values', function() {
+			mutable.newValue = 'I didn\'t exist before';
+			assert.equal(mutable.newValue, 'I didn\'t exist before');
 		});
 	});
 
@@ -73,9 +92,17 @@ describe('envcfg', function() {
 		});
 	});
 
-	describe('#.get(key)', function(){
+	describe('#.get(key)', function() {
 		it('should access the property', function(){
 			config.get('some stuff').should.equal('whatever');
+		});
+	});
+
+	describe('#envcfg(nested_object)', function() {
+		it('should create from a nested object', function() {
+			var config = envcfg(require(path.join(__dirname + '/fixtures/nested')), {deepMerge: true});
+			assert.equal(config.nest.bar, 'exam');
+			assert(config.nest.zing);
 		});
 	});
 

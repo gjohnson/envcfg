@@ -39,13 +39,14 @@ exports.Config = Config;
  * @api public
  */
 
-function Config(cfg) {
+function Config(cfg, opts) {
   define(this, 'env', {
     value: process.env.NODE_ENV || 'development'
   });
 
   var settings = clone(cfg[this.env]) || {};
-  if (cfg['*']) extend(settings, cfg['*']);
+
+  if (cfg['*']) extend(settings, cfg['*'], opts.deepMerge);
 
   Object.keys(settings).forEach(function(key) {
     define(this, key, {
@@ -75,9 +76,17 @@ Config.prototype.get = function(key){
  * @api public
  */
 
-function envcfg(config) {
+function envcfg(config, opts) {
+  opts = opts || {};
   config = typeof config === 'string' ? read(config) : config;
-  return Object.freeze(new Config(config));
+  if (opts.mutable === true) {
+    // allow the config object to be modified
+    descriptors.writable = true;
+    descriptors.configurable = true;
+    descriptors.enumerable = true;
+    return new Config(config, opts);
+  }
+  return Object.freeze(new Config(config, opts));
 }
 
 /**
@@ -95,15 +104,26 @@ function read(file) {
 }
 
 /**
- * Extend object `a` with object `b`.
+ * Extend object `a` with object `b`. Now does deep extension if deep parameter is true.
  *
  * @param {Object} a
  * @param {Object} b
+ * @param {Boolean} deep
  * @return {Object}
  * @api private
  */
 
-function extend(a, b) {
+function extend(a, b, deep) {
+  if (deep) {
+    Object.keys(b).forEach(function(key) {
+      if (!a.hasOwnProperty(key)) {
+        a[key] = b[key];
+      } else if (b[key].constructor && b[key].constructor === Object) {
+        a[key] = extend(a[key], b[key]);
+      }
+    });
+    return a;
+  }
   Object.keys(b).forEach(function(key) {
     if (!a.hasOwnProperty(key)) a[key] = b[key];
   });
@@ -119,6 +139,6 @@ function extend(a, b) {
  * @api private
  */
 
-function define(context, key, value){
-  Object.defineProperty(context, key, extend(value, descriptors));
+function define(context, key, value, deep){
+  Object.defineProperty(context, key, extend(value, descriptors, deep));
 }
